@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>YearSound — Best Songs by Year</title>
+  <style>
+    :root{
+      --bg: #0b0c10;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.10);
+      --border: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.68);
+      --shadow: 0 24px 70px rgba(0,0,0,0.45);
+      --r: 18px;
+      --r2: 26px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 15% 10%, rgba(88,101,242,0.22), transparent 58%),
+        radial-gradient(900px 600px at 85% 12%, rgba(34,197,94,0.12), transparent 58%),
+        radial-gradient(900px 600px at 60% 100%, rgba(236,72,153,0.10), transparent 58%),
+        linear-gradient(180deg, #07080d, var(--bg));
+      overflow-x:hidden;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    .wrap{ width:min(1200px, 92%); margin:0 auto; padding:22px 0 64px; }
+
+    /* Top Bar */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: rgba(7,8,13,0.45);
+      border-bottom: 1px solid var(--border);
+    }
+    .top{
+      width:min(1200px, 92%);
+      margin: 0 auto;
+      padding: 14px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 220px;
+    }
+    .logo{
+      width:40px;
+      height:40px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06));
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+      display:grid;
+      place-items:center;
+    }
+    .logo svg{ opacity:0.95; }
+    .brand h1{
+      margin:0;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+      font-weight: 900;
+    }
+    .brand p{
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .controls{
+      flex:1;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+    .pill, .field, select, input{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 800;
+      outline:none;
+      backdrop-filter: blur(10px);
+    }
+    .field{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      min-width: 260px;
+    }
+    .field input{
+      border:none;
+      background: transparent;
+      padding: 0;
+      width: 100%;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .field input::placeholder{ color: rgba(255,255,255,0.55); }
+
+    .btn{
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,0.14);
+      background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .btn:hover{ background: rgba(255,255,255,0.10); }
+    .btn:active{ transform: translateY(1px); }
+
+    /* Hero */
+    .hero{
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      border-radius: var(--r2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-40px -40px auto -40px;
+      height: 260px;
+      background:
+        radial-gradient(520px 220px at 18% 40%, rgba(88,101,242,0.22), transparent 60%),
+        radial-gradient(560px 240px at 78% 40%, rgba(34,197,94,0.12), transparent 62%),
+        radial-gradient(520px 220px at 58% 90%, rgba(236,72,153,0.10), transparent 60%);
+      pointer-events:none;
+    }
+    .hero-inner{
+      position:relative;
+      padding: 20px;
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .hero h2{
+      margin: 0 0 8px;
+      font-size: 22px;
+      letter-spacing: -0.3px;
+      font-weight: 1000;
+    }
+    .hero .sub{
+      margin: 0;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 1.5;
+      max-width: 760px;
+    }
+    .chips{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .chip{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      font-weight: 900;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .chip strong{ color: var(--text); }
+
+    /* Decade buttons */
+    .decades{
+      margin-top: 14px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .decades .btn{
+      padding: 10px 14px;
+    }
+
+    /* Grid */
+    .grid{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .card{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      border-radius: var(--r);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height: 220px;
+    }
+    .card-top{
+      padding: 14px 14px 10px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .year-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
+      font-weight: 1000;
+      color: rgba(255,255,255,0.85);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+    }
+    .title{
+      padding: 0 14px 8px;
+    }
+    .title h3{
+      margin:0 0 6px;
+      font-size: 15px;
+      font-weight: 1000;
+      letter-spacing: -0.2px;
+      line-height: 1.25;
+    }
+    .title p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .actions{
+      margin-top:auto;
+      padding: 12px 14px 14px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .primary{
+      flex:1;
+      min-width: 160px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
+      font-weight: 1000;
+      font-size: 13px;
+    }
+    .primary:hover{ background: rgba(255,255,255,0.10); }
+    .secondary{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      font-weight: 1000;
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+      white-space:nowrap;
+    }
+    .secondary:hover{ background: rgba(255,255,255,0.09); }
+
+    .links{
+      width: 100%;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top: 8px;
+    }
+    .mini{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 12px;
+    }
+    .mini:hover{ color: var(--text); background: rgba(255,255,255,0.08); }
+
+    /* Footer */
+    footer{
+      margin-top: 18px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 700;
+      font-size: 12px;
+      display:flex;
+      gap:12px;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      padding-top: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+      .field{ min-width: 220px; }
+    }
+    @media (max-width: 640px){
+      .top{ flex-direction:column; align-items:stretch; }
+      .brand{ min-width: unset; }
+      .controls{ justify-content:space-between; }
+      .grid{ grid-template-columns: 1fr; }
+      .field{ min-width: unset; width:100%; }
+      .pill, select{ width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M9 18V6l11-2v12" stroke="rgba(255,255,255,0.92)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 18c0 1.66-1.79 3-4 3s-4-1.34-4-3 1.79-3 4-3 4 1.34 4 3Z" stroke="rgba(255,255,255,0.92)" stroke-width="1.9"/>
+            <path d="M20 16c0 1.66-1.79 3-4 3s-4-1.34-4-3 1.79-3 4-3 4 1.34 4 3Z" stroke="rgba(255,255,255,0.92)" stroke-width="1.9"/>
+          </svg>
+        </div>
+        <div>
+          <h1>YearSound</h1>
+          <p>Three iconic songs per year • Support artists</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="field" title="Search by song or artist">
+          🔎
+          <input id="q" placeholder="Search song or artist…" />
+        </div>
+
+        <select id="year" class="pill" title="Filter by year">
+          <option value="">All years</option>
+        </select>
+
+        <select id="decade" class="pill" title="Filter by decade">
+          <option value="">All decades</option>
+        </select>
+
+        <button id="reset" class="btn">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <h2 id="headline">Best songs by year (1960s starter)</h2>
+          <p class="sub">
+            This is a sleek, filterable music timeline. Click <strong>Watch</strong> to open YouTube.
+            When an official link is available, it’s labeled <strong>Official</strong>. Otherwise, it uses a safe YouTube search link.
+            Support links and socials appear when provided.
+          </p>
+          <div class="decades" id="decadeButtons"></div>
+        </div>
+        <div class="chips">
+          <span class="chip">Showing <strong id="count">0</strong> tracks</span>
+          <span class="chip">Years <strong id="range">—</strong></span>
+          <span class="chip">Tip: add more years by extending the <strong>TRACKS</strong> array</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" id="grid"></section>
+
+    <footer>
+      <div>Made for fun • Apple-style minimalist UI • Works on GitHub Pages</div>
+      <div>Data links are editable in code • Prioritize official artist channels + sites when possible</div>
+    </footer>
+  </div>
+
+  <script>
+    /**
+     * Data model:
+     * - video.url: put official video URL if you have it; otherwise keep a YouTube search URL
+     * - video.type: "official" | "search"
+     * - support: list of donation/store links (Patreon, Bandcamp, official store, charity, etc.)
+     * - socials: official socials (if known)
+     */
+    const TRACKS = [
+      // 1960
+      { year: 1960, song: "The Twist", artist: "Chubby Checker",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Chubby+Checker+The+Twist+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1960, song: "Cathy's Clown", artist: "The Everly Brothers",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Everly+Brothers+Cathy%27s+Clown+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1960, song: "Only the Lonely", artist: "Roy Orbison",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Roy+Orbison+Only+the+Lonely+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+
+      // 1961
+      { year: 1961, song: "Stand by Me", artist: "Ben E. King",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Ben+E+King+Stand+By+Me+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1961, song: "Runaway", artist: "Del Shannon",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Del+Shannon+Runaway+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1961, song: "Blue Moon", artist: "The Marcels",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Marcels+Blue+Moon+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+
+      // 1962
+      { year: 1962, song: "Green Onions", artist: "Booker T. & the M.G.'s",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Booker+T+Green+Onions+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1962, song: "Love Me Do", artist: "The Beatles",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Beatles+Love+Me+Do+official+video" },
+        officialSite: "https://www.thebeatles.com/", support: [], socials: { instagram:"https://www.instagram.com/thebeatles/", x:"https://x.com/thebeatles", youtube:"https://www.youtube.com/@thebeatles" }
+      },
+      { year: 1962, song: "I Can't Stop Loving You", artist: "Ray Charles",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Ray+Charles+I+Can%27t+Stop+Loving+You+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+
+      // 1963
+      { year: 1963, song: "Be My Baby", artist: "The Ronettes",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Ronettes+Be+My+Baby+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1963, song: "Blowin' in the Wind", artist: "Bob Dylan",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Bob+Dylan+Blowin+in+the+Wind+official" },
+        officialSite: "https://www.bobdylan.com/", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1963, song: "Walk Like a Man", artist: "The Four Seasons",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Four+Seasons+Walk+Like+a+Man+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+
+      // 1964
+      { year: 1964, song: "My Girl", artist: "The Temptations",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Temptations+My+Girl+official+video" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1964, song: "A Hard Day's Night", artist: "The Beatles",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Beatles+A+Hard+Day%27s+Night+official" },
+        officialSite: "https://www.thebeatles.com/", support: [], socials: { instagram:"https://www.instagram.com/thebeatles/", x:"https://x.com/thebeatles", youtube:"https://www.youtube.com/@thebeatles" }
+      },
+      { year: 1964, song: "The House of the Rising Sun", artist: "The Animals",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Animals+House+of+the+Rising+Sun+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+
+      // 1965
+      { year: 1965, song: "(I Can't Get No) Satisfaction", artist: "The Rolling Stones",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Rolling+Stones+Satisfaction+official+video" },
+        officialSite: "https://rollingstones.com/", support: [], socials: { instagram:"https://www.instagram.com/therollingstones/", x:"https://x.com/RollingStones", youtube:"https://www.youtube.com/@therollingstones" }
+      },
+      { year: 1965, song: "Like a Rolling Stone", artist: "Bob Dylan",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Bob+Dylan+Like+a+Rolling+Stone+official" },
+        officialSite: "https://www.bobdylan.com/", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1965, song: "Yesterday", artist: "The Beatles",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Beatles+Yesterday+official" },
+        officialSite: "https://www.thebeatles.com/", support: [], socials: { instagram:"https://www.instagram.com/thebeatles/", x:"https://x.com/thebeatles", youtube:"https://www.youtube.com/@thebeatles" }
+      },
+
+      // 1966
+      { year: 1966, song: "Good Vibrations", artist: "The Beach Boys",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Beach+Boys+Good+Vibrations+official+video" },
+        officialSite: "https://thebeachboys.com/", support: [], socials: { instagram:"https://www.instagram.com/thebeachboys/", x:"https://x.com/thebeachboys", youtube:"https://www.youtube.com/@TheBeachBoys" }
+      },
+      { year: 1966, song: "Paint It, Black", artist: "The Rolling Stones",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Rolling+Stones+Paint+It+Black+official+video" },
+        officialSite: "https://rollingstones.com/", support: [], socials: { instagram:"https://www.instagram.com/therollingstones/", x:"https://x.com/RollingStones", youtube:"https://www.youtube.com/@therollingstones" }
+      },
+      { year: 1966, song: "Reach Out I'll Be There", artist: "Four Tops",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Four+Tops+Reach+Out+I%27ll+Be+There+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+
+      // 1967
+      { year: 1967, song: "Respect", artist: "Aretha Franklin",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Aretha+Franklin+Respect+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1967, song: "Purple Haze", artist: "The Jimi Hendrix Experience",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Jimi+Hendrix+Purple+Haze+official" },
+        officialSite: "https://www.jimihendrix.com/", support: [], socials: { instagram:"https://www.instagram.com/jimihendrix/", x:"https://x.com/jimihendrix", youtube:"https://www.youtube.com/@jimihendrix" }
+      },
+      { year: 1967, song: "A Day in the Life", artist: "The Beatles",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Beatles+A+Day+in+the+Life+official" },
+        officialSite: "https://www.thebeatles.com/", support: [], socials: { instagram:"https://www.instagram.com/thebeatles/", x:"https://x.com/thebeatles", youtube:"https://www.youtube.com/@thebeatles" }
+      },
+
+      // 1968
+      { year: 1968, song: "Hey Jude", artist: "The Beatles",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Beatles+Hey+Jude+official+video" },
+        officialSite: "https://www.thebeatles.com/", support: [], socials: { instagram:"https://www.instagram.com/thebeatles/", x:"https://x.com/thebeatles", youtube:"https://www.youtube.com/@thebeatles" }
+      },
+      { year: 1968, song: "(Sittin' On) The Dock of the Bay", artist: "Otis Redding",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Otis+Redding+Dock+of+the+Bay+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1968, song: "Piece of My Heart", artist: "Big Brother & the Holding Company (Janis Joplin)",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Janis+Joplin+Piece+of+My+Heart+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+
+      // 1969
+      { year: 1969, song: "Here Comes the Sun", artist: "The Beatles",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=The+Beatles+Here+Comes+the+Sun+official" },
+        officialSite: "https://www.thebeatles.com/", support: [], socials: { instagram:"https://www.instagram.com/thebeatles/", x:"https://x.com/thebeatles", youtube:"https://www.youtube.com/@thebeatles" }
+      },
+      { year: 1969, song: "Fortunate Son", artist: "Creedence Clearwater Revival",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Creedence+Clearwater+Revival+Fortunate+Son+official" },
+        officialSite: "", support: [], socials: { instagram:"", x:"", youtube:"" }
+      },
+      { year: 1969, song: "Whole Lotta Love", artist: "Led Zeppelin",
+        video: { type:"search", url:"https://www.youtube.com/results?search_query=Led+Zeppelin+Whole+Lotta+Love+official" },
+        officialSite: "https://ledzeppelin.com/", support: [], socials: { instagram:"https://www.instagram.com/ledzeppelin/", x:"https://x.com/ledzeppelin", youtube:"" }
+      },
+    ];
+
+    // Helpers
+    const $ = (id) => document.getElementById(id);
+    const uniq = (arr) => [...new Set(arr)];
+    const decadeOf = (year) => Math.floor(year / 10) * 10;
+
+    function safeLink(url){
+      return url && typeof url === "string" && url.startsWith("http");
+    }
+
+    function miniLink(label, url){
+      if(!safeLink(url)) return "";
+      return `<a class="mini" href="${url}" target="_blank" rel="noreferrer noopener">${label}</a>`;
+    }
+
+    function renderCard(t){
+      const decade = decadeOf(t.year);
+      const isOfficial = t.video?.type === "official";
+      const watchLabel = isOfficial ? "Watch (Official)" : "Watch on YouTube";
+
+      const links = [];
+      if (safeLink(t.officialSite)) links.push(miniLink("Official site", t.officialSite));
+      if (safeLink(t.socials?.youtube)) links.push(miniLink("YouTube", t.socials.youtube));
+      if (safeLink(t.socials?.instagram)) links.push(miniLink("Instagram", t.socials.instagram));
+      if (safeLink(t.socials?.x)) links.push(miniLink("X", t.socials.x));
+
+      // Support links (donate/store/etc.)
+      if (Array.isArray(t.support)){
+        t.support.forEach(s => {
+          if (s && safeLink(s.url)) links.push(miniLink(s.label || "Support", s.url));
+        });
+      }
+
+      return `
+        <article class="card">
+          <div class="card-top">
+            <span class="year-badge">📅 ${t.year} • ${decade}s</span>
+            <span class="year-badge">${isOfficial ? "✅ Official link" : "🔎 Search link"}</span>
+          </div>
+
+          <div class="title">
+            <h3>${t.song}</h3>
+            <p>${t.artist}</p>
+          </div>
+
+          <div class="actions">
+            <a class="primary" href="${t.video.url}" target="_blank" rel="noreferrer noopener">▶ ${watchLabel}</a>
+            <button class="secondary" data-copy="${t.song} — ${t.artist} (${t.year})">Copy</button>
+
+            <div class="links">
+              ${links.join("") || `<span class="mini">No extra links added yet</span>`}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function buildFilters(){
+      const years = uniq(TRACKS.map(t => t.year)).sort((a,b)=>a-b);
+      const decades = uniq(TRACKS.map(t => decadeOf(t.year))).sort((a,b)=>a-b);
+
+      // Year select
+      const yearSel = $("year");
+      yearSel.innerHTML = `<option value="">All years</option>` + years.map(y => `<option value="${y}">${y}</option>`).join("");
+
+      // Decade select
+      const decSel = $("decade");
+      decSel.innerHTML = `<option value="">All decades</option>` + decades.map(d => `<option value="${d}">${d}s</option>`).join("");
+
+      // Decade buttons
+      const btns = $("decadeButtons");
+      btns.innerHTML = decades.map(d => `<button class="btn" data-decade="${d}">${d}s</button>`).join("");
+
+      btns.addEventListener("click", (e)=>{
+        const b = e.target.closest("button[data-decade]");
+        if(!b) return;
+        $("decade").value = b.dataset.decade;
+        $("year").value = "";
+        apply();
+        window.scrollTo({top: 0, behavior: "smooth"});
+      });
+
+      // Stats
+      $("range").textContent = `${years[0]}–${years[years.length-1]}`;
+    }
+
+    function apply(){
+      const q = ($("q").value || "").trim().toLowerCase();
+      const year = $("year").value ? Number($("year").value) : null;
+      const decade = $("decade").value ? Number($("decade").value) : null;
+
+      let filtered = TRACKS.slice();
+
+      if (year !== null){
+        filtered = filtered.filter(t => t.year === year);
+      } else if (decade !== null){
+        filtered = filtered.filter(t => decadeOf(t.year) === decade);
+      }
+
+      if (q){
+        filtered = filtered.filter(t =>
+          (t.song || "").toLowerCase().includes(q) ||
+          (t.artist || "").toLowerCase().includes(q)
+        );
+      }
+
+      // Sort by year then song
+      filtered.sort((a,b)=> (a.year - b.year) || a.song.localeCompare(b.song));
+
+      $("count").textContent = String(filtered.length);
+
+      const headlineBase = (year !== null) ? `Best songs of ${year}` :
+                           (decade !== null) ? `Best songs of the ${decade}s` :
+                           `Best songs by year (1960s starter)`;
+      $("headline").textContent = headlineBase;
+
+      $("grid").innerHTML = filtered.map(renderCard).join("") || `
+        <div class="card" style="grid-column: 1 / -1;">
+          <div class="title" style="padding:18px;">
+            <h3 style="margin:0 0 8px;">No results</h3>
+            <p style="margin:0; color: var(--muted); font-weight:700;">
+              Try clearing filters or searching a different term.
+            </p>
+          </div>
+        </div>
+      `;
+
+      // Wire up copy buttons
+      document.querySelectorAll("button[data-copy]").forEach(btn=>{
+        btn.onclick = async () => {
+          try{
+            await navigator.clipboard.writeText(btn.dataset.copy);
+            btn.textContent = "Copied ✓";
+            setTimeout(()=> btn.textContent = "Copy", 900);
+          } catch {
+            alert("Copy failed. Your browser may block clipboard access.");
+          }
+        };
+      });
+    }
+
+    function resetAll(){
+      $("q").value = "";
+      $("year").value = "";
+      $("decade").value = "";
+      apply();
+    }
+
+    // Init
+    buildFilters();
+    apply();
+
+    $("q").addEventListener("input", apply);
+    $("year").addEventListener("change", ()=>{ $("decade").value=""; apply(); });
+    $("decade").addEventListener("change", ()=>{ $("year").value=""; apply(); });
+    $("reset").addEventListener("click", resetAll);
+  </script>
+</body>
+</html>
